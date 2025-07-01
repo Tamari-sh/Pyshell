@@ -39,4 +39,16 @@ line entry in the history list.
 !-n    Refer to the current command minus n.
 !!     Refer  to  the  previous command.  A
        synonym for `!-1'.
-"""}
+""",
+       "cat": """DESCRIPTION
+Print the output of a file
+ 
+SYNOPSIS
+cat [OPTION]... [FILE]...
+ """,
+       "touch": """DESCRIPTION
+Create a new file
+ 
+SYNOPSIS
+touch [OPTION]... [FILE]...
+ """}
