@@ -19,6 +19,27 @@ def pyshell_ls() -> None:
     print(Style.RESET_ALL)
 
 
+def pyshell_cd(path: str) -> None:
+    """Function to change working directory"""
+    path_split = path.split("/")
+    current_path = os.getcwd()
+
+    for folder in path_split:
+        if folder == ".":
+            continue
+        if folder == "..":
+            break_path = current_path.split("\\")
+            break_path.pop()
+            new_path = "\\".join(break_path)
+            os.chdir(new_path)
+        else:
+            new_path = os.path.join(current_path + "\\", folder)
+            if os.path.isdir(new_path):
+                os.chdir(new_path)
+            else:
+                break
+
+
 def pyshell_pwd() -> None:
     """Function to print working directory"""
 
@@ -29,7 +50,7 @@ def pyshell_echo(echo_str: str) -> None:
     """Function to print wanted echoed strings"""
 
     print(echo_str)
-    
+
 
 def main() -> None:
     """The Pyshell API"""
@@ -37,11 +58,22 @@ def main() -> None:
     print(Fore.MAGENTA + "✨ 💗 🎀  Welcome to the Python shell!!!  🎀 💗 ✨")
     print(Style.RESET_ALL)
     while True:
-        action = input("💗 ")
+        # get action input with flags and params from user
+        input_cmd = input("💗 ")
+        actions = input_cmd.split(" ")
+        action = actions[0]
+
         if action == "ls":
             pyshell_ls()
+        elif action == "cd":
+            pyshell_cd(actions[1])
         elif action == "pwd":
             pyshell_pwd()
+        elif action == "echo":
+            # join the string to print
+            actions.remove(action)
+            echo = " ".join(actions)
+            pyshell_echo(echo)
         elif action == "quit":
             break
         else:
