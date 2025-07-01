@@ -42,12 +42,9 @@ def pyshell_cd(path: str) -> None:
         if folder == ".":
             continue
         if folder == "..":
-            break_path = current_path.split("\\")
-            break_path.pop()
-            new_path = "\\".join(break_path)
-            os.chdir(new_path)
+            os.chdir(os.path.dirname(current_path))
         else:
-            new_path = os.path.join(current_path + "\\", folder)
+            new_path = os.path.abspath(folder)
             if os.path.isdir(new_path):
                 os.chdir(new_path)
             else:
@@ -83,7 +80,7 @@ def main() -> None:
         if action == "ls":
             pyshell_ls(actions)
         elif action == "cd":
-            pyshell_cd(actions[1])
+            pyshell_cd(actions[0])
         elif action == "pwd":
             pyshell_pwd()
         elif action == "echo":
