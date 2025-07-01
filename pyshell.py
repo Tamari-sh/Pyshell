@@ -60,10 +60,12 @@ def pyshell_pwd() -> None:
     print(os.getcwd())
 
 
-def pyshell_echo(echo_str: str) -> None:
+def pyshell_echo(echo_lst: List[str]) -> None:
     """Function to print wanted echoed strings"""
 
-    print(echo_str)
+    # join the string to print
+    echo = " ".join(echo_lst)
+    print(echo)
 
 
 def main() -> None:
@@ -85,9 +87,7 @@ def main() -> None:
         elif action == "pwd":
             pyshell_pwd()
         elif action == "echo":
-            # join the string to print
-            echo = " ".join(actions)
-            pyshell_echo(echo)
+            pyshell_echo(actions)
         elif action == "quit":
             break
         else:
