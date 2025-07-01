@@ -20,3 +20,15 @@ def pyshell_cat(file_name: str) -> None:
     else:
         print(f"cat: '{file_name}' no such file or directory")
 
+
+def pyshell_touch(file_name: str) -> None:
+    """Function to create a new file"""
+
+    with open(file_name, "w") as new_file:
+        new_file.write("")
+
+
+def pyshell_mv(src: str, dst: str) -> None:
+    """Function to move or rename files"""
+
+    pass

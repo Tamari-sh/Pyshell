@@ -5,6 +5,7 @@ from man import MAN
 from other import pyshell_echo, pyshell_pwd
 from dirs import pyshell_cd
 from ls import pyshell_ls
+from files import pyshell_cat, pyshell_touch
 
 
 def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
@@ -44,6 +45,10 @@ def pyshell() -> None:
                 print(MAN[man_action])
         elif action == "history":
             pyshell_history()
+        elif action == "cat":
+            pyshell_cat(actions[0])
+        elif action == "touch":
+            pyshell_touch(actions[0])
         elif action == "quit":
             break
         else:
