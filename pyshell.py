@@ -25,6 +25,12 @@ def pyshell_pwd() -> None:
     print(os.getcwd())
 
 
+def pyshell_echo(echo_str: str) -> None:
+    """Function to print wanted echoed strings"""
+
+    print(echo_str)
+    
+
 def main() -> None:
     """The Pyshell API"""
 
