@@ -8,6 +8,9 @@ from man import MAN
 from typing import Tuple, List
 
 
+HISTORY_FILE = "history.xz"
+
+
 def pyshell_ls(cmd: List[str]) -> None:
     """Function to recreate ls in python"""
     current_path = os.getcwd()
@@ -66,16 +69,38 @@ def pyshell_echo(echo_lst: str) -> None:
     print(echo)
 
 
-def pyshell_history(file_name: str) -> None:
+def pyshell_history() -> None:
     """Function that outputs the command history"""
 
     i = 1
 
-    with lzma.open(file_name, "r") as history:
+    with lzma.open(HISTORY_FILE, "r") as history:
         lines_of_history = history.readlines()
         for line in lines_of_history:
             print(f"{i}   {line.decode()}")
             i += 1
+
+
+def pyshell_history_magics(command: str) -> str:
+    """Return a new command according to magic"""
+
+    with lzma.open(HISTORY_FILE, "r") as history:
+        lines_of_history = history.readlines()
+
+    if command.startswith("!") and not command.startswith("! "):
+        if command == "!!":
+            action = lines_of_history[-1]
+        elif command.startswith("!-"):
+            index = len(lines_of_history) - int(command[2:])
+            action = lines_of_history[index]
+        elif command.startswith("!"):
+            index = int(command[1:])
+            action = lines_of_history[index]
+
+        return action.decode()[:-1]
+
+    else:
+        return command
 
 
 def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
@@ -93,23 +118,25 @@ def _add_to_history(action: str) -> str:
 
     # if its a magic - don't log action in history
     if action.startswith("!") and not action.startswith("! "):
-        return
+        return HISTORY_FILE
     else:
-        with lzma.open("history.xz", "a") as file:
+        with lzma.open(HISTORY_FILE, "a") as file:
             file.write(f"{action}\n".encode())
-        return "history.xz"
+        return HISTORY_FILE
 
 
-def main() -> None:
-    """The Pyshell API"""
+def pyshell() -> None:
+    """The Pyshell main logic"""
 
-    print(Fore.MAGENTA + "✨ 💗 🎀  Welcome to the Python shell!!!  🎀 💗 ✨")
-    print(Style.RESET_ALL)
     while True:
         # get action input with flags and params from user
         input_cmd = input("💗 ")
-        history_file = _add_to_history(input_cmd)
+        # in case of magic cmd
+        input_cmd = pyshell_history_magics(input_cmd)
         actions, action = _parser_input(input_cmd)
+
+        # create log
+        _add_to_history(input_cmd)
 
         if action == "ls":
             pyshell_ls(actions)
@@ -124,11 +151,19 @@ def main() -> None:
             if man_action in MAN.keys():
                 print(MAN[man_action])
         elif action == "history":
-            pyshell_history(history_file)
+            pyshell_history()
         elif action == "quit":
             break
         else:
             continue
+
+
+def main() -> None:
+    """The Pyshell API"""
+
+    print(Fore.MAGENTA + "✨ 💗 🎀  Welcome to the Python shell!!!  🎀 💗 ✨")
+    print(Style.RESET_ALL)
+    pyshell()
 
 
 if __name__ == '__main__':
