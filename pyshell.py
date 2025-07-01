@@ -5,6 +5,32 @@ import sys
 from colorama import Fore, Back, Style
 
 
+MAN = {"ls": """DESCRIPTION
+List directory contents
+ 
+SYNOPSIS
+ls [OPTION]... [FILE]...  
+ """,
+       "cd": """DESCRIPTION
+Change working directory
+ 
+SYNOPSIS
+cd [PATH]...
+ """,
+       "pwd": """DESCRIPTION
+Print working directory
+ 
+SYNOPSIS
+pwd
+ """,
+       "echo": """DESCRIPTION
+display a line of text
+ 
+SYNOPSIS
+echo [STRING]...
+ """}
+
+
 def pyshell_ls() -> None:
     """Function to recreate ls in python"""
     current_path = os.getcwd()
@@ -74,6 +100,10 @@ def main() -> None:
             actions.remove(action)
             echo = " ".join(actions)
             pyshell_echo(echo)
+        elif action == "man":
+            man_action = actions[1]
+            if man_action in MAN.keys():
+                print(MAN[man_action])
         elif action == "quit":
             break
         else:
