@@ -5,7 +5,7 @@ import sys
 from colorama import Fore, Back, Style
 
 
-def pyshell_ls() -> str:
+def pyshell_ls() -> None:
     """Function to recreate ls in python"""
     current_path = os.getcwd()
 
@@ -19,8 +19,27 @@ def pyshell_ls() -> str:
     print(Style.RESET_ALL)
 
 
+def pyshell_pwd() -> None:
+    """Function to print working directory"""
+
+    print(os.getcwd())
+
+
 def main() -> None:
-    pyshell_ls()
+    """The Pyshell API"""
+
+    print(Fore.MAGENTA + "✨ 💗 🎀  Welcome to the Python shell!!!  🎀 💗 ✨")
+    print(Style.RESET_ALL)
+    while True:
+        action = input("💗 ")
+        if action == "ls":
+            pyshell_ls()
+        elif action == "pwd":
+            pyshell_pwd()
+        elif action == "quit":
+            break
+        else:
+            continue
 
 
 if __name__ == '__main__':
