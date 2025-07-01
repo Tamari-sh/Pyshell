@@ -12,7 +12,7 @@ def pyshell_ls(cmd: List[str]) -> None:
     """Function to recreate ls in python"""
     current_path = os.getcwd()
 
-    if len(cmd) > 0:
+    if len(cmd) > 0 and cmd[0] != "":
         # if path of alternative directory passed
         path = cmd[0]
         if os.path.isdir(path):
@@ -44,12 +44,9 @@ def pyshell_cd(path: str) -> None:
         if folder == ".":
             continue
         if folder == "..":
-            break_path = current_path.split("\\")
-            break_path.pop()
-            new_path = "\\".join(break_path)
-            os.chdir(new_path)
+            os.chdir(os.path.dirname(current_path))
         else:
-            new_path = os.path.join(current_path + "\\", folder)
+            new_path = os.path.abspath(folder)
             if os.path.isdir(new_path):
                 os.chdir(new_path)
             else:
@@ -62,10 +59,11 @@ def pyshell_pwd() -> None:
     print(os.getcwd())
 
 
-def pyshell_echo(echo_str: str) -> None:
+def pyshell_echo(echo_lst: str) -> None:
     """Function to print wanted echoed strings"""
-
-    print(echo_str)
+    # join the string to print
+    echo = " ".join(echo_lst)
+    print(echo)
 
 
 def pyshell_history(file_name: str) -> None:
@@ -116,9 +114,7 @@ def main() -> None:
         elif action == "pwd":
             pyshell_pwd()
         elif action == "echo":
-            # join the string to print
-            echo = " ".join(actions)
-            pyshell_echo(echo)
+            pyshell_echo(actions)
         elif action == "man":
             man_action = actions[0]
             if man_action in MAN.keys():
