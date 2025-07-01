@@ -21,8 +21,22 @@ SYNOPSIS
 pwd
  """,
        "echo": """DESCRIPTION
-display a line of text
+Display a line of text
  
 SYNOPSIS
 echo [STRING]...
- """}
+ """,
+       "history": """DESCRIPTION
+Display that Pyshell history library
+ 
+EVENT DESIGNATORS
+An  event  designator  is  a reference to a command
+line entry in the history list.
+
+!      Start a history  substitution,  except  when
+       followed by a blank, newline, or char other than -.
+!n     Refer to command line n.
+!-n    Refer to the current command minus n.
+!!     Refer  to  the  previous command.  A
+       synonym for `!-1'.
+"""}
