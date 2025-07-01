@@ -3,32 +3,12 @@ import glob
 import shutil
 import sys
 from colorama import Fore, Back, Style
+import lzma
+from man import MAN
+from typing import Tuple, List
 
 
-MAN = {"ls": """DESCRIPTION
-List directory contents
- 
-SYNOPSIS
-ls [OPTION]... [FILE]...  
- """,
-       "cd": """DESCRIPTION
-Change working directory
- 
-SYNOPSIS
-cd [PATH]...
- """,
-       "pwd": """DESCRIPTION
-Print working directory
- 
-SYNOPSIS
-pwd
- """,
-       "echo": """DESCRIPTION
-display a line of text
- 
-SYNOPSIS
-echo [STRING]...
- """}
+HISTORY = []
 
 
 def pyshell_ls() -> None:
@@ -78,6 +58,36 @@ def pyshell_echo(echo_str: str) -> None:
     print(echo_str)
 
 
+def pyshell_history(file_name: str) -> None:
+    """Function that outputs the command history"""
+
+    i = 1
+
+    with lzma.open(file_name, "r") as history:
+        lines_of_history = history.readlines()
+        for line in lines_of_history:
+            print(f"{i}   {line.decode()}")
+            i += 1
+
+
+def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
+    """Divide the given cmd input into command and params and flags list"""
+
+    actions = input_cmd.split(" ")
+    action = actions[0]
+    actions.remove(action)
+
+    return actions, action
+
+
+def _add_to_history(action: str) -> str:
+    """Log actions in compressed history file"""
+
+    with lzma.open("history.xz", "a") as file:
+        file.write(f"{action}\n".encode())
+    return "history.xz"
+
+
 def main() -> None:
     """The Pyshell API"""
 
@@ -86,24 +96,25 @@ def main() -> None:
     while True:
         # get action input with flags and params from user
         input_cmd = input("💗 ")
-        actions = input_cmd.split(" ")
-        action = actions[0]
+        history_file = _add_to_history(input_cmd)
+        actions, action = _parser_input(input_cmd)
 
         if action == "ls":
             pyshell_ls()
         elif action == "cd":
-            pyshell_cd(actions[1])
+            pyshell_cd(actions[0])
         elif action == "pwd":
             pyshell_pwd()
         elif action == "echo":
             # join the string to print
-            actions.remove(action)
             echo = " ".join(actions)
             pyshell_echo(echo)
         elif action == "man":
-            man_action = actions[1]
+            man_action = actions[0]
             if man_action in MAN.keys():
                 print(MAN[man_action])
+        elif action == "history":
+            pyshell_history(history_file)
         elif action == "quit":
             break
         else:
