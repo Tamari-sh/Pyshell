@@ -8,19 +8,29 @@ from man import MAN
 from typing import Tuple, List
 
 
-HISTORY = []
-
-
-def pyshell_ls() -> None:
+def pyshell_ls(cmd: List[str]) -> None:
     """Function to recreate ls in python"""
     current_path = os.getcwd()
 
-    for root, dirs, files in os.walk(current_path):
-        for directory in dirs:
-            print(Fore.BLUE + directory)
-            dirs.remove(directory)
-        for file in files:
-            print(Fore.GREEN + file)
+    if len(cmd) > 0:
+        # if path of alternative directory passed
+        path = cmd[0]
+        if os.path.isdir(path):
+            for root, dirs, files in os.walk(path):
+                for directory in dirs:
+                    print(Fore.BLUE + directory)
+                    dirs.remove(directory)
+                for file in files:
+                    print(Fore.GREEN + file)
+        else:
+            print(f"ls cannot access '{path}': No such directory")
+    else:
+        for root, dirs, files in os.walk(current_path):
+            for directory in dirs:
+                print(Fore.BLUE + directory)
+                dirs.remove(directory)
+            for file in files:
+                print(Fore.GREEN + file)
 
     print(Style.RESET_ALL)
 
@@ -100,7 +110,7 @@ def main() -> None:
         actions, action = _parser_input(input_cmd)
 
         if action == "ls":
-            pyshell_ls()
+            pyshell_ls(actions)
         elif action == "cd":
             pyshell_cd(actions[0])
         elif action == "pwd":
