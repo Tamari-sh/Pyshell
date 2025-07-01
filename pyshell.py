@@ -91,9 +91,13 @@ def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
 def _add_to_history(action: str) -> str:
     """Log actions in compressed history file"""
 
-    with lzma.open("history.xz", "a") as file:
-        file.write(f"{action}\n".encode())
-    return "history.xz"
+    # if its a magic - don't log action in history
+    if action.startswith("!") and not action.startswith("! "):
+        return
+    else:
+        with lzma.open("history.xz", "a") as file:
+            file.write(f"{action}\n".encode())
+        return "history.xz"
 
 
 def main() -> None:
