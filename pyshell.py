@@ -10,7 +10,7 @@ def pyshell_ls(cmd: List[str]) -> None:
     """Function to recreate ls in python"""
     current_path = os.getcwd()
 
-    if len(cmd) > 0:
+    if len(cmd) > 0 and cmd[0] != "":
         # if path of alternative directory passed
         path = cmd[0]
         if os.path.isdir(path):
