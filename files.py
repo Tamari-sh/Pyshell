@@ -32,7 +32,10 @@ def pyshell_touch(file_name: str) -> None:
 def pyshell_mv(src: str, dst: str) -> None:
     """Function to move or rename files"""
 
-    pass
+    if os.path.exists(os.path.abspath(src)):
+        shutil.move(os.path.abspath(src), os.path.abspath(dst))
+    else:
+        print(f"mv: cannot stat '{src}', no such file or directory")
 
 
 def pyshell_cp(src: str, dst: str) -> None:
@@ -45,7 +48,10 @@ def pyshell_rm(file: str) -> None:
     """Function to remove files or directories"""
 
     if os.path.isfile(file):
-        os.remove(file)
+        if input("Are you sure? (y/n)") == "y":
+            os.remove(file)
+        else:
+            print("Operation failed")
     elif os.path.isdir(file):
         print(f"rm: cannot remove '{file}', is a directory")
     else:

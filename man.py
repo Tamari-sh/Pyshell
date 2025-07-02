@@ -69,4 +69,11 @@ Remove files
  
 SYNOPSIS
 rm [OPTION]... [FILE]...
+ """,
+       "mv": """DESCRIPTION
+move or rename files
+ 
+SYNOPSIS
+mv [OPTION]... [SOURCE][DEST]
+mv [OPTION]... [SOURCE][DIRECTORY]
  """}
