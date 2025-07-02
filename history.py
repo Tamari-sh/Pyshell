@@ -4,7 +4,7 @@ File containing history functions
 import lzma
 
 
-HISTORY_FILE = "history.xz"
+HISTORY_FILE = "C:\\תמרי\\OP\\Pyshell\\history.xz"
 
 
 def pyshell_history() -> None:
