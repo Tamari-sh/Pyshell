@@ -39,4 +39,48 @@ line entry in the history list.
 !-n    Refer to the current command minus n.
 !!     Refer  to  the  previous command.  A
        synonym for `!-1'.
-"""}
+""",
+       "cat": """DESCRIPTION
+Print the output of a file
+ 
+SYNOPSIS
+cat [OPTION]... [FILE]...
+ """,
+       "touch": """DESCRIPTION
+Create a new file
+ 
+SYNOPSIS
+touch [OPTION]... [FILE]...
+ """,
+       "mkdir": """DESCRIPTION
+Create new directory
+ 
+SYNOPSIS
+mkdir [OPTION]... [DIRECTORY]...
+ """,
+       "rmdir": """DESCRIPTION
+Remove directories
+ 
+SYNOPSIS
+rmdir [OPTION]... [DIRECTORY]...
+ """,
+       "rm": """DESCRIPTION
+Remove files
+ 
+SYNOPSIS
+rm [OPTION]... [FILE]...
+ """,
+       "mv": """DESCRIPTION
+Move or rename files
+ 
+SYNOPSIS
+mv [OPTION]... [SOURCE][DEST]
+mv [OPTION]... [SOURCE][DIRECTORY]
+ """,
+       "cp": """DESCRIPTION
+Copy files or directories
+ 
+SYNOPSIS
+cp [OPTION]... [SOURCE][DEST]
+cp [OPTION]... [SOURCE][DIRECTORY]
+ """}
