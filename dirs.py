@@ -21,3 +21,14 @@ def pyshell_cd(path: str) -> None:
             else:
                 break
 
+
+def pyshell_mkdir(directory: str) -> None:
+    """Function to create directories"""
+
+    os.mkdir(directory)
+
+
+def pyshell_rmdir(directory: str) -> None:
+    """Function to remove directories"""
+
+    pass

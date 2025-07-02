@@ -3,7 +3,7 @@ from typing import Tuple, List
 from history import pyshell_history, pyshell_history_magics, _add_to_history
 from man import MAN
 from other import pyshell_echo, pyshell_pwd
-from dirs import pyshell_cd
+from dirs import pyshell_cd, pyshell_mkdir
 from ls import pyshell_ls
 from files import pyshell_cat, pyshell_touch
 
@@ -11,11 +11,11 @@ from files import pyshell_cat, pyshell_touch
 def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
     """Divide the given cmd input into command and params and flags list"""
 
-    actions = input_cmd.split(" ")
-    action = actions[0]
-    actions.remove(action)
+    params = input_cmd.split(" ")
+    command = params[0]
+    params.remove(command)
 
-    return actions, action
+    return params, command
 
 
 def pyshell() -> None:
@@ -26,30 +26,32 @@ def pyshell() -> None:
         input_cmd = input("💗 ")
         # in case of magic cmd
         input_cmd = pyshell_history_magics(input_cmd)
-        actions, action = _parser_input(input_cmd)
+        params, command = _parser_input(input_cmd)
 
         # create log
         _add_to_history(input_cmd)
 
-        if action == "ls":
-            pyshell_ls(actions)
-        elif action == "cd":
-            pyshell_cd(actions[0])
-        elif action == "pwd":
+        if command == "ls":
+            pyshell_ls(params)
+        elif command == "cd":
+            pyshell_cd(params[0])
+        elif command == "pwd":
             pyshell_pwd()
-        elif action == "echo":
-            pyshell_echo(actions)
-        elif action == "man":
-            man_action = actions[0]
-            if man_action in MAN.keys():
-                print(MAN[man_action])
-        elif action == "history":
+        elif command == "echo":
+            pyshell_echo(params)
+        elif command == "man":
+            man_page = params[0]
+            if man_page in MAN.keys():
+                print(MAN[man_page])
+        elif command == "history":
             pyshell_history()
-        elif action == "cat":
-            pyshell_cat(actions[0])
-        elif action == "touch":
-            pyshell_touch(actions[0])
-        elif action == "quit":
+        elif command == "cat":
+            pyshell_cat(params[0])
+        elif command == "touch":
+            pyshell_touch(params[0])
+        elif command == "mkdir":
+            pyshell_mkdir(params[0])
+        elif command == "quit":
             break
         else:
             continue

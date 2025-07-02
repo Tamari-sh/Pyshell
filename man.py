@@ -51,4 +51,10 @@ Create a new file
  
 SYNOPSIS
 touch [OPTION]... [FILE]...
+ """,
+       "mkdir": """DESCRIPTION
+Create new directory
+ 
+SYNOPSIS
+mkdir [OPTION]... [DIRECTORY]...
  """}
