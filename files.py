@@ -41,7 +41,8 @@ def pyshell_mv(src: str, dst: str) -> None:
 def pyshell_cp(src: str, dst: str) -> None:
     """Function to copy files or directories"""
 
-    pass
+    if os.path.exists(os.path.abspath(src)):
+        shutil.copy(os.path.abspath(src), os.path.abspath(dst))
 
 
 def pyshell_rm(file: str) -> None:

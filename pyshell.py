@@ -5,7 +5,7 @@ from man import MAN
 from other import pyshell_echo, pyshell_pwd
 from dirs import *
 from ls import pyshell_ls
-from files import pyshell_cat, pyshell_touch, pyshell_rm, pyshell_mv
+from files import pyshell_cat, pyshell_touch, pyshell_rm, pyshell_mv, pyshell_cp
 
 
 def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
@@ -93,6 +93,11 @@ def pyshell() -> None:
                 _print_syntax_message(command)
             else:
                 pyshell_mv(params[0], params[1])
+        elif command == "cp":
+            if _wrong_syntax(params):
+                _print_syntax_message(command)
+            else:
+                pyshell_cp(params[0], params[1])
         elif command == "quit":
             break
         else:

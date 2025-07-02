@@ -71,9 +71,16 @@ SYNOPSIS
 rm [OPTION]... [FILE]...
  """,
        "mv": """DESCRIPTION
-move or rename files
+Move or rename files
  
 SYNOPSIS
 mv [OPTION]... [SOURCE][DEST]
 mv [OPTION]... [SOURCE][DIRECTORY]
+ """,
+       "cp": """DESCRIPTION
+Copy files or directories
+ 
+SYNOPSIS
+cp [OPTION]... [SOURCE][DEST]
+cp [OPTION]... [SOURCE][DIRECTORY]
  """}
