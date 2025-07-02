@@ -62,7 +62,8 @@ def pyshell_pwd() -> None:
     print(os.getcwd())
 
 
-def pyshell_echo(echo_lst: str) -> None:
+
+def pyshell_echo(echo_lst: List[str]) -> None:
     """Function to print wanted echoed strings"""
     # join the string to print
     echo = " ".join(echo_lst)
