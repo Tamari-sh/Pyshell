@@ -36,6 +36,9 @@ def pyshell_rmdir(directory: str) -> None:
         print(f"rmdir: failed to remove '{directory}', not a directory")
     else:
         try:
-            os.rmdir(directory)
+            if input("Are you sure? (y/n)") == "y":
+                os.rmdir(directory)
+            else:
+                print("Operation failed")
         except FileNotFoundError:
             print(f"rmdir: failed to remove '{directory}', no such file or directory")
