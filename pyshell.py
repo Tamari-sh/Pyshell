@@ -1,33 +1,129 @@
-from colorama import Fore, Style
-from typing import Tuple, List
-from history import pyshell_history, pyshell_history_magics, _add_to_history
+import os
+import glob
+import shutil
+import sys
+from colorama import Fore, Back, Style
+import lzma
 from man import MAN
-from other import pyshell_echo, pyshell_pwd
-from dirs import *
-from ls import pyshell_ls
-from files import pyshell_cat, pyshell_touch, pyshell_rm, pyshell_mv, pyshell_cp
+from typing import Tuple, List
+
+
+HISTORY_FILE = "history.xz"
+
+
+def pyshell_ls(cmd: List[str]) -> None:
+    """Function to recreate ls in python"""
+    current_path = os.getcwd()
+
+    if len(cmd) > 0 and cmd[0] != "":
+        # if path of alternative directory passed
+        path = cmd[0]
+        if os.path.isdir(path):
+            for root, dirs, files in os.walk(path):
+                for directory in dirs:
+                    print(Fore.BLUE + directory)
+                    dirs.remove(directory)
+                for file in files:
+                    print(Fore.GREEN + file)
+        else:
+            print(f"ls cannot access '{path}': No such directory")
+    else:
+        for root, dirs, files in os.walk(current_path):
+            for directory in dirs:
+                print(Fore.BLUE + directory)
+                dirs.remove(directory)
+            for file in files:
+                print(Fore.GREEN + file)
+
+    print(Style.RESET_ALL)
+
+
+def pyshell_cd(path: str) -> None:
+    """Function to change working directory"""
+    path_split = path.split("/")
+    current_path = os.getcwd()
+
+    for folder in path_split:
+        if folder == ".":
+            continue
+        if folder == "..":
+            os.chdir(os.path.dirname(current_path))
+        else:
+            new_path = os.path.abspath(folder)
+            if os.path.isdir(new_path):
+                os.chdir(new_path)
+            else:
+                break
+
+
+def pyshell_pwd() -> None:
+    """Function to print working directory"""
+
+    print(os.getcwd())
+
+
+
+def pyshell_echo(echo_lst: List[str]) -> None:
+    """Function to print wanted echoed strings"""
+    # join the string to print
+    echo = " ".join(echo_lst)
+    print(echo)
+
+
+def pyshell_history() -> None:
+    """Function that outputs the command history"""
+
+    i = 1
+
+    with lzma.open(HISTORY_FILE, "r") as history:
+        lines_of_history = history.readlines()
+        for line in lines_of_history:
+            print(f"{i}   {line.decode()}")
+            i += 1
+
+
+def pyshell_history_magics(command: str) -> str:
+    """Return a new command according to magic"""
+
+    with lzma.open(HISTORY_FILE, "r") as history:
+        lines_of_history = history.readlines()
+
+    if command.startswith("!") and not command.startswith("! "):
+        if command == "!!":
+            action = lines_of_history[-1]
+        elif command.startswith("!-"):
+            index = len(lines_of_history) - int(command[2:])
+            action = lines_of_history[index]
+        elif command.startswith("!"):
+            index = int(command[1:])
+            action = lines_of_history[index]
+
+        return action.decode()[:-1]
+
+    else:
+        return command
 
 
 def _parser_input(input_cmd: str) -> Tuple[List[str], str]:
     """Divide the given cmd input into command and params and flags list"""
 
-    params = input_cmd.split(" ")
-    command = params[0]
-    params.remove(command)
+    actions = input_cmd.split(" ")
+    action = actions[0]
+    actions.remove(action)
 
-    return params, command
-
-
-def _wrong_syntax(params: List[str]) -> bool:
-    """Function to check if syntax used correctly"""
-
-    return len(params) == 0
+    return actions, action
 
 
-def _print_syntax_message(command: str) -> None:
-    """Function print message to use syntax correctly"""
+def _add_to_history(action: str) -> str:
+    """Log actions in compressed history file"""
 
-    print(f"{command}: missing operands\nTry 'man {command}' for more info")
+    # if its a magic - don't log action in history
+    if action.startswith("!") and not action.startswith("! "):
+        return HISTORY_FILE
+    else:
+        with lzma.open(HISTORY_FILE, "a") as file:
+            file.write(f"{action}\n".encode())
+        return HISTORY_FILE
 
 
 def pyshell() -> None:
@@ -38,70 +134,28 @@ def pyshell() -> None:
         input_cmd = input("💗 ")
         # in case of magic cmd
         input_cmd = pyshell_history_magics(input_cmd)
-        params, command = _parser_input(input_cmd)
+        actions, action = _parser_input(input_cmd)
 
         # create log
         _add_to_history(input_cmd)
 
-        if command == "ls":
-            pyshell_ls(params)
-        elif command == "cd":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_cd(params[0])
-        elif command == "pwd":
+        if action == "ls":
+            pyshell_ls(actions)
+        elif action == "cd":
+            pyshell_cd(actions[0])
+        elif action == "pwd":
             pyshell_pwd()
-        elif command == "echo":
-            pyshell_echo(params)
-        elif command == "man":
-            if _wrong_syntax(params):
-                print("what manual page do you want?\nTry 'man [COMMAND NAME]'")
-            else:
-                man_page = params[0]
-                if man_page in MAN.keys():
-                    print(MAN[man_page])
-        elif command == "history":
+        elif action == "echo":
+            pyshell_echo(actions)
+        elif action == "man":
+            man_action = actions[0]
+            if man_action in MAN.keys():
+                print(MAN[man_action])
+        elif action == "history":
             pyshell_history()
-        elif command == "cat":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_cat(params[0])
-        elif command == "touch":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_touch(params[0])
-        elif command == "mkdir":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_mkdir(params[0])
-        elif command == "rmdir":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_rmdir(params[0])
-        elif command == "rm":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_rm(params[0])
-        elif command == "mv":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_mv(params[0], params[1])
-        elif command == "cp":
-            if _wrong_syntax(params):
-                _print_syntax_message(command)
-            else:
-                pyshell_cp(params[0], params[1])
-        elif command == "quit":
+        elif action == "quit":
             break
         else:
-            print(f"{command}: command not found")
             continue
 
 
