@@ -2,6 +2,7 @@
 File containing file related shell functionality.
 """
 import os
+import os.path
 import shutil
 
 
@@ -32,3 +33,20 @@ def pyshell_mv(src: str, dst: str) -> None:
     """Function to move or rename files"""
 
     pass
+
+
+def pyshell_cp(src: str, dst: str) -> None:
+    """Function to copy files or directories"""
+
+    pass
+
+
+def pyshell_rm(file: str) -> None:
+    """Function to remove files or directories"""
+
+    if os.path.isfile(file):
+        os.remove(file)
+    elif os.path.isdir(file):
+        print(f"rm: cannot remove '{file}', is a directory")
+    else:
+        print(f"rm: cannot remove '{file}', no such file or directory")

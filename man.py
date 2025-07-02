@@ -57,4 +57,16 @@ Create new directory
  
 SYNOPSIS
 mkdir [OPTION]... [DIRECTORY]...
+ """,
+       "rmdir": """DESCRIPTION
+Remove directories
+ 
+SYNOPSIS
+rmdir [OPTION]... [DIRECTORY]...
+ """,
+       "rm": """DESCRIPTION
+Remove files
+ 
+SYNOPSIS
+rm [OPTION]... [FILE]...
  """}

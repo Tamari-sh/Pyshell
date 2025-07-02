@@ -2,6 +2,7 @@
 File containing dir related shell functionality.
 """
 import os
+import os.path
 
 
 def pyshell_cd(path: str) -> None:
@@ -31,4 +32,10 @@ def pyshell_mkdir(directory: str) -> None:
 def pyshell_rmdir(directory: str) -> None:
     """Function to remove directories"""
 
-    pass
+    if os.path.isfile(directory):
+        print(f"rmdir: failed to remove '{directory}', not a directory")
+    else:
+        try:
+            os.rmdir(directory)
+        except FileNotFoundError:
+            print(f"rmdir: failed to remove '{directory}', no such file or directory")
